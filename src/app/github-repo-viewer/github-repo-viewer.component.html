@@ -1,0 +1,78 @@
+<div class="container mx-auto p-4">
+    <!-- User Input Section -->
+    <div class="mb-4">
+      <div class="flex items-center space-x-2 mb-2">
+        <input
+          [(ngModel)]="githubUsername"
+          placeholder="Enter GitHub username"
+          class="border border-gray-400 rounded-lg p-2 w-1/2"
+        />
+        <button (click)="onUsernameEntered()" class="bg-blue-500 text-white rounded-lg p-2">View Repositories</button>
+      </div>
+    <!-- Sorting Options Dropdown -->
+  <div class="flex items-center space-x-2">
+    <span class="text-sm">Sort by:</span>
+    <select [(ngModel)]="selectedSortOption" (change)="onSortOptionChange()" class="border border-gray-400 rounded-lg p-2">
+      <option *ngFor="let option of sortingOptions" [value]="option">{{ option }}</option>
+    </select>
+  </div>
+</div>
+  
+    <ng-container *ngIf="userData">
+      <!-- User Information -->
+      <div class="flex items-center space-x-4">
+        <!-- User Picture -->
+        <img [src]="userData.avatar_url" alt="User Avatar" class="w-16 h-16 rounded-full">
+        <div class="text-left">
+          <!-- User Name -->
+          <h3 class="text-2xl font-semibold">{{ userData.login }}</h3>
+          <!-- User Bio -->
+          <p class="text-sm text-gray-600">{{ userData.bio }}</p>
+          <!-- User Twitter ID (if available) -->
+          <p class="text-sm text-gray-600" *ngIf="userData.twitter_username">
+            <a [href]="'https://twitter.com/' + userData.twitter_username" target="_blank">
+              Twitter: @{{ userData.twitter_username }}
+            </a>
+          </p>
+          <!-- User GitHub URL -->
+          <p class="text-sm text-gray-600">
+            <a [href]="userData.html_url" target="_blank">{{ userData.html_url }}</a>
+          </p>
+        </div>
+      </div>
+    </ng-container>
+  
+    <!-- Repositories Section -->
+    <div *ngIf="repositories && repositories.length > 0">
+      <h3 class="text-lg font-semibold mt-6 mb-2">GitHub Repositories</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <ng-container *ngFor="let repo of repositories; let i = index">
+          <!-- Repository Card -->
+          <div class="border rounded-sm p-4">
+            <!-- Repository Title -->
+            <h4 class="text-xl font-semibold">{{ repo.name }}</h4>
+            <!-- Repository Description -->
+            <p class="text-gray-600 text-sm mt-2">{{ repo.description }}</p>
+            <!-- Repository Topics (if available) -->
+            <div class="mt-2">
+              <span *ngFor="let topic of repo.topics" class="bg-blue-500 text-white text-sm px-2 py-1 mr-2">{{ topic }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  
+    <!-- Pagination Controls -->
+    <div>
+      <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 1" class="bg-blue-500 text-white rounded p-2">Previous Page</button>
+      <span class="text-xl font-semibold p-4">{{ currentPage }}</span>
+      <button (click)="onPageChange(currentPage + 1)" [disabled]="repositories.length < itemsPerPage" class="bg-blue-500 text-white rounded p-2">Next Page</button>
+      <app-pagination
+          [currentPage]="currentPage"
+          [totalPages]="totalPages"
+          (pageChange)="onPageChange($event)">
+      </app-pagination>
+    </div>
+  </div>
+  
+  

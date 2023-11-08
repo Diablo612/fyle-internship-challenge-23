@@ -1,0 +1,8 @@
+<div class="flex items-center">
+  <ng-container *ngFor="let page of range()">
+    <!-- container to display the page number -->
+    <div class="page-number-container">
+      <button (click)="onPageChange(page)" [class.bg-blue-500]="page == currentPage" class="bg-blue-200 text-black rounded-full px-2 py-1">{{ page }}</button>
+    </div>
+  </ng-container>
+</div>
